@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutsu OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f5f2;
+      --text: #2c2a27;
+      --accent: #788773;
+      --accent-soft: #a8b5a0;
+      --card: #ffffff;
+      --border: #e0ddd6;
+      --font: 'Inter', system-ui, sans-serif;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    body.cyberpunk {
+      --bg: #050508;
+      --text: #e0e0ff;
+      --accent: #00e5ff;
+      --accent-soft: #ff2d9b;
+      --card: #0f0f18;
+      --border: #1a1a2e;
+      --font: 'VT323', 'Press Start 2P', monospace;
+      --radius: 2px;
+      --shadow: 0 0 20px rgba(0,229,255,0.3);
+      background-image: 
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.4s, color 0.4s;
+      min-height: 100vh;
+      position: relative;
+    }
+    body.cyberpunk::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,229,255,0.03) 2px,
+        rgba(0,229,255,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+      animation: scan 8s linear infinite;
+    }
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
+    }
+    .theme-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+    body.cyberpunk .theme-btn {
+      background: linear-gradient(90deg, #00e5ff, #ff2d9b);
+      color: #000;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      animation: glitch-btn 3s infinite;
+    }
+    @keyframes glitch-btn {
+      0%, 90%, 100% { transform: translate(0); filter: none; }
+      92% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+      94% { transform: translate(2px, -1px); filter: hue-rotate(-90deg); }
+      96% { transform: translate(-1px, -2px); }
+    }
+    .theme-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    header {
+      text-align: center;
+      padding: 120px 20px 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+    }
+    body.cyberpunk .logo {
+      filter: drop-shadow(0 0 15px #00e5ff) drop-shadow(0 0 30px #ff2d9b);
+      animation: logo-glitch 4s infinite;
+    }
+    @keyframes logo-glitch {
+      0%, 95%, 100% { transform: none; }
+      96% { transform: translate(2px, -1px) skewX(2deg); }
+      97% { transform: translate(-2px, 1px) skewX(-2deg); }
+      98% { transform: translate(1px, 2px); }
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin: 0 0 10px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+    body.cyberpunk h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 2.2rem;
+      color: #00e5ff;
+      text-shadow: 0 0 10px #00e5ff, 2px 2px 0 #ff2d9b;
+      animation: text-glitch 5s infinite;
+    }
+    @keyframes text-glitch {
+      0%, 92%, 100% { text-shadow: 0 0 10px #00e5ff, 2px 2px 0 #ff2d9b; }
+      93% { text-shadow: 3px 0 #ff2d9b, -3px 0 #00e5ff; }
+      94% { text-shadow: -2px 0 #00e5ff, 2px 0 #ff2d9b; }
+    }
+    .subtitle {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto 30px;
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+    body.cyberpunk .subtitle {
+      font-size: 1.4rem;
+      color: #a0a0ff;
+    }
+    .download-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 14px 32px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow);
+    }
+    body.cyberpunk .download-btn {
+      background: #ff2d9b;
+      color: #000;
+      border: 2px solid #00e5ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #ff2d9b; }
+      50% { box-shadow: 0 0 25px #00e5ff, 0 0 40px #ff2d9b; }
+    }
+    .download-btn:hover { transform: scale(1.05); }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+    body.cyberpunk .card {
+      border: 1px solid #00e5ff;
+      box-shadow: 0 0 15px rgba(0,229,255,0.2);
+      background: linear-gradient(135deg, #0f0f18 0%, #15152a 100%);
+    }
+    body.cyberpunk .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(255,45,155,0.4);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.3rem;
+    }
+    body.cyberpunk .card h3 {
+      color: #ff2d9b;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      opacity: 0.7;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+    a { color: var(--accent); }
+    body.cyberpunk a { color: #00e5ff; }
+    .status {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 20px auto;
+      max-width: 600px;
+      border: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    body.cyberpunk .status {
+      border-color: #ff2d9b;
+      color: #ffaaee;
+    }
+  </style>
+</head>
+<body class="japandi">
+  <button class="theme-btn" id="themeToggle">Switch to Cyberpunk</button>
+
+  <header>
+    <img class="logo" id="logo" src="https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-japandi.svg" alt="Mutsu OS Logo">
+    <h1>Mutsu OS</h1>
+    <p class="subtitle">A Bazzite GNOME-derived, Mac-familiar Linux desktop with Steam/Proton gaming support, two visual styles (Calm Japandi and Cyberpunk), a compact Spotlight-style app/file launcher, and optional Mutsu AI help.</p>
+    <a class="download-btn" id="isoDownload" href="https://github.com/markymark5127/mutsu-os/releases" target="_blank" rel="noopener">Download Latest ISO</a>
+    <div class="status" id="releaseStatus">Checking for latest release...</div>
+  </header>
+
+  <main>
+    <div class="features">
+      <div class="card">
+        <h3>Calm Japandi</h3>
+        <p>Sage wallpaper, light appearance, soft rounded UI, floating Dash-to-Dock, and a serene green accent. Designed for focused, beautiful daily computing.</p>
+      </div>
+      <div class="card">
+        <h3>Cyberpunk Edge</h3>
+        <p>Harsh squared corners, neon gradients, high-contrast glitch aesthetics. Switch instantly when you want the full night-city energy.</p>
+      </div>
+      <div class="card">
+        <h3>Mac-Familiar</h3>
+        <p>Window buttons on the left, 12-hour clock, hot corners off by default, Super+Space for Spotlight-style search. Fully overridable.</p>
+      </div>
+      <div class="card">
+        <h3>Gaming Ready</h3>
+        <p>Built on Bazzite GNOME with full Steam/Proton hardware support intact. Play your library without compromise.</p>
+      </div>
+      <div class="card">
+        <h3>Mutsu Search</h3>
+        <p>Native GNOME-integrated launcher with local app search, bounded file search, and optional AI fallback.</p>
+      </div>
+      <div class="card">
+        <h3>Alpha Status</h3>
+        <p>Source and packaging exist. Bootable images and fresh-install verification are in progress. Test only on disposable VMs.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Mutsu OS · <a href="https://github.com/markymark5127/mutsu-os" target="_blank">Source on GitHub</a> · Based on Universal Blue Bazzite & Fedora</p>
+    <p>Two visual styles. One desktop. Switch anytime.</p>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const toggle = document.getElementById('themeToggle');
+    const logo = document.getElementById('logo');
+    const isoLink = document.getElementById('isoDownload');
+    const status = document.getElementById('releaseStatus');
+
+    const japandiLogo = 'https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-japandi.svg';
+    const cyberLogo = 'https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-cyberpunk.svg';
+
+    function setTheme(theme) {
+      if (theme === 'cyberpunk') {
+        body.classList.add('cyberpunk');
+        body.classList.remove('japandi');
+        toggle.textContent = 'Switch to Japandi';
+        logo.src = cyberLogo;
+        document.title = 'MUTSU OS // CYBER';
+      } else {
+        body.classList.remove('cyberpunk');
+        body.classList.add('japandi');
+        toggle.textContent = 'Switch to Cyberpunk';
+        logo.src = japandiLogo;
+        document.title = 'Mutsu OS';
+      }
+      localStorage.setItem('mutsu-theme', theme);
+    }
+
+    toggle.addEventListener('click', () => {
+      const isCyber = body.classList.contains('cyberpunk');
+      setTheme(isCyber ? 'japandi' : 'cyberpunk');
+    });
+
+    // Load saved theme
+    const saved = localStorage.getItem('mutsu-theme');
+    if (saved === 'cyberpunk') setTheme('cyberpunk');
+
+    // Fetch latest release for ISO
+    fetch('https://api.github.com/repos/markymark5127/mutsu-os/releases/latest')
+      .then(r => {
+        if (!r.ok) throw new Error('No releases');
+        return r.json();
+      })
+      .then(data => {
+        const iso = (data.assets || []).find(a => a.name && a.name.toLowerCase().endsWith('.iso'));
+        if (iso) {
+          isoLink.href = iso.browser_download_url;
+          isoLink.textContent = `Download ${data.tag_name || 'Latest'} ISO`;
+          status.textContent = `Latest release: ${data.tag_name || 'unknown'} · ${iso.name}`;
+        } else {
+          status.textContent = 'No ISO asset in the latest release yet. Visit the releases page.';
+        }
+      })
+      .catch(() => {
+        status.textContent = 'No published releases yet. Check the GitHub releases page for updates.';
+        isoLink.href = 'https://github.com/markymark5127/mutsu-os/releases';
+      });
+  </script>
+</body>
+</html>
