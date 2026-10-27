@@ -97,7 +97,7 @@
     .theme-btn:hover { transform: translateY(-2px); opacity: 0.9; }
     header {
       text-align: center;
-      padding: 120px 20px 60px;
+      padding: 120px 20px 40px;
       position: relative;
       z-index: 2;
     }
@@ -174,15 +174,32 @@
     main {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 20px 80px;
+      padding: 20px 20px 80px;
       position: relative;
       z-index: 2;
+    }
+    .highlights {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 50px;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    .highlights h2 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+    body.cyberpunk .highlights h2 {
+      color: #00e5ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 24px;
-      margin-top: 40px;
+      margin-top: 20px;
     }
     .card {
       background: var(--card);
@@ -248,30 +265,37 @@
   </header>
 
   <main>
+    <div class="highlights">
+      <h2>Built for how you actually use it</h2>
+      <p>Mutsu OS is a desktop that understands convertible hardware. On a 2-in-1 it can switch between a full Mac-like desktop and a tablet-oriented app-grid Home, with posture detection and bottom-edge gestures planned for the Adaptive Desktop experience.</p>
+      <p>Gaming is first-class. The image keeps Bazzite’s full Steam and Proton hardware support, so your library runs the same way it does on stock Bazzite—no stripped drivers or missing codecs.</p>
+      <p>The Mutsu mechanic is an optional AI assistant that lives in the search launcher. It’s designed to help you find files and apps, answer questions about the system, and (when you choose) assist with setup or troubleshooting—always opt-in, never forced, and never shipping with your personal keys.</p>
+    </div>
+
     <div class="features">
       <div class="card">
-        <h3>Calm Japandi</h3>
-        <p>Sage wallpaper, light appearance, soft rounded UI, floating Dash-to-Dock, and a serene green accent. Designed for focused, beautiful daily computing.</p>
-      </div>
-      <div class="card">
-        <h3>Cyberpunk Edge</h3>
-        <p>Harsh squared corners, neon gradients, high-contrast glitch aesthetics. Switch instantly when you want the full night-city energy.</p>
-      </div>
-      <div class="card">
-        <h3>Mac-Familiar</h3>
-        <p>Window buttons on the left, 12-hour clock, hot corners off by default, Super+Space for Spotlight-style search. Fully overridable.</p>
+        <h3>Adaptive Desktop</h3>
+        <p>Convertible-ready: MacBook-like when open, iPad-style app grid when folded. Manual Desktop/Tablet selector today; automatic posture and gestures in progress.</p>
       </div>
       <div class="card">
         <h3>Gaming Ready</h3>
-        <p>Built on Bazzite GNOME with full Steam/Proton hardware support intact. Play your library without compromise.</p>
+        <p>Full Bazzite Steam/Proton stack. Handheld, desktop, and HTPC hardware support stays intact.</p>
       </div>
       <div class="card">
-        <h3>Mutsu Search</h3>
-        <p>Native GNOME-integrated launcher with local app search, bounded file search, and optional AI fallback.</p>
+        <h3>Mutsu AI</h3>
+        <p>Opt-in assistant inside Mutsu Search. Helps with local search, system questions, and guided setup—credentials stay yours.</p>
       </div>
       <div class="card">
-        <h3>Alpha Status</h3>
-        <p>Source and packaging exist. Bootable images and fresh-install verification are in progress. Test only on disposable VMs.</p>
+        <h3>Calm Japandi</h3>
+        <p>Sage wallpaper, light appearance, soft rounded UI, floating Dash-to-Dock, and a serene green accent.</p>
+      </div>
+      <div class="card">
+        <h3>Cyberpunk Edge</h3>
+        <p>Harsh squared corners, neon gradients, high-contrast glitch aesthetics. Switch instantly.</p>
+      </div>
+      <div class="card">
+        <h3>Mac-Familiar</h3>
+        <p>Left window buttons, 12-hour clock, Super+Space search, hot corners off. Fully overridable.</p>
       </div>
     </div>
   </main>
