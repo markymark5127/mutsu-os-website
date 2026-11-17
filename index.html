@@ -381,35 +381,126 @@
       border: 1px solid rgba(229, 141, 99, 0.35);
     }
     .release-sub { color: var(--ink-soft); margin: 0 0 24px; font-size: 0.95rem; }
-    .download-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
     .btn-outline {
       color: var(--deep);
       background: rgba(255, 255, 255, 0.5);
       border: 1px solid var(--line);
     }
     .btn-outline:hover { background: rgba(255, 255, 255, 0.85); transform: translateY(-2px); }
-    .status {
-      font-size: 0.88rem;
-      color: var(--ink-soft);
-      min-height: 1.4em;
+    .tag.sage { background: rgba(120, 135, 115, 0.16); color: var(--deep); border-color: rgba(120, 135, 115, 0.35); }
+
+    .release-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px 24px;
+      border-radius: var(--r-lg);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      background: var(--glass-strong);
     }
-    .specs {
-      list-style: none;
-      padding: 0;
-      margin: 28px 0 0;
+    .release-bar .release-sub { margin: 0; }
+
+    .variants {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+      gap: 20px;
     }
-    .specs li {
-      padding: 14px 16px;
+    .variant {
+      border-radius: var(--r-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      background: var(--glass-strong);
+    }
+    .variant-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+    .variant h3 { margin: 0; font-size: 1.35rem; letter-spacing: -0.015em; }
+    .variant-meta { margin: 0 0 10px; font-size: 0.92rem; font-weight: 600; color: var(--deep); }
+    .variant .desc { margin: 0 0 20px; font-size: 0.96rem; color: var(--ink-soft); }
+    .parts {
+      margin-top: auto;
+      padding: 6px;
       border-radius: var(--r-sm);
       background: rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.75);
     }
-    .specs li small { display: block; color: var(--ink-soft); font-size: 0.78rem; margin-bottom: 2px; }
-    .specs li strong { font-weight: 600; }
+    .parts ul { list-style: none; margin: 0; padding: 0; }
+    .parts li + li { border-top: 1px solid rgba(214, 220, 207, 0.6); }
+    .parts li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .parts li a:hover { background: rgba(255, 255, 255, 0.85); }
+    .parts li a svg { width: 16px; height: 16px; flex: none; stroke: var(--sage); }
+    .parts .n { font-weight: 600; font-size: 0.9rem; min-width: 52px; }
+    .parts .f { flex: 1; min-width: 0; font: 0.76rem var(--mono); color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .parts .s { font-size: 0.82rem; color: var(--ink-soft); white-space: nowrap; }
+    .parts li.sum .n { color: var(--sage); }
+    .parts-empty { margin: 0; padding: 10px 12px; font-size: 0.9rem; color: var(--ink-soft); }
+
+    /* Build the disk image */
+    .build {
+      margin-top: 20px;
+      border-radius: var(--r-lg);
+      padding: clamp(24px, 4vw, 44px);
+      background: var(--glass-strong);
+    }
+    .build-head h3 { margin: 0 0 8px; font-size: 1.6rem; letter-spacing: -0.02em; }
+    .build-head p { margin: 0; max-width: 700px; color: var(--ink-soft); }
+    .build-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px 24px;
+      margin: 28px 0;
+    }
+    .seg-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .seg-label { font-size: 0.85rem; color: var(--ink-soft); }
+    .seg {
+      display: inline-flex;
+      gap: 2px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(35, 40, 35, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    .seg button {
+      border: 0;
+      background: transparent;
+      font: 500 0.9rem var(--font);
+      color: var(--ink-soft);
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .seg button[aria-selected="true"], .seg button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(35, 40, 35, 0.12), inset 0 1px 0 #fff;
+    }
+    .steps p code, .rebase p code, .after code, .build-head code {
+      font: 0.86em var(--mono);
+      background: rgba(35, 40, 35, 0.06);
+      padding: 1px 6px;
+      border-radius: 6px;
+    }
+    .steps .code-wrap { margin-top: 10px; }
+    .steps .warn { color: #A8532C; }
+    .after {
+      margin: 8px 0 0;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+    .after strong { color: var(--ink); }
 
     .steps { list-style: none; counter-reset: s; padding: 0; margin: 0; }
     .steps li {
@@ -470,23 +561,25 @@
     @media (max-width: 860px) { .rebase { grid-template-columns: 1fr; } }
     .rebase h3 { margin: 0 0 8px; font-size: 1.35rem; letter-spacing: -0.015em; }
     .rebase p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+    .code-wrap { position: relative; min-width: 0; }
     .code {
-      position: relative;
+      margin: 0;
       border-radius: var(--r-sm);
       background: rgba(35, 40, 35, 0.88);
       color: #EDE9DF;
-      font: 0.86rem/1.6 var(--mono);
-      padding: 18px 56px 18px 18px;
+      font: 0.84rem/1.65 var(--mono);
+      padding: 16px 70px 16px 18px;
       overflow-x: auto;
+      white-space: pre;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
     }
-    .code .dim { color: #9fb09a; user-select: none; }
+    .code .c { color: #9fb09a; }
     .copy {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 9px;
+      right: 9px;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(60, 66, 60, 0.9);
       color: #EDE9DF;
       border-radius: 10px;
       padding: 6px 10px;
@@ -550,9 +643,9 @@
     <h1>Mutsu OS</h1>
     <p class="lede">A calm Linux desktop that feels familiar from the first click. It's Mac-like when your laptop is open, iPad-like when you fold it into a tablet, and it plays your Steam library.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" data-iso-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">
+      <a class="btn btn-primary" href="#download">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
-        <span data-iso-label>Download Live ISO</span>
+        Download the Beta
       </a>
       <a class="btn btn-glass" href="#features">Take a look</a>
     </div>
@@ -631,54 +724,158 @@
       <div class="center">
         <p class="eyebrow">Download</p>
         <h2>Try it live. Install when you're ready.</h2>
-        <p class="section-lede">The live ISO boots the full Mutsu desktop from a USB stick without touching your disk. If you like it, the installer is right there on the desktop.</p>
+        <p class="section-lede">The live USB boots the full Mutsu desktop without touching your disk. If you like it, the installer is right there on the desktop.</p>
       </div>
 
-      <div class="download-panel glass">
+      <div class="release-bar glass">
         <div>
           <div class="release-title">
             <h3 data-release-name>Mutsu OS 0.9.0 Beta</h3>
             <span class="tag">Beta</span>
           </div>
-          <p class="release-sub"><span data-release-date>Released November 15, 2026</span> · Live desktop ISO</p>
+          <p class="release-sub"><span data-release-date>Released November 15, 2026</span> · Live USB for 64-bit PCs with UEFI</p>
+        </div>
+        <a class="btn btn-outline" data-release-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">Release notes</a>
+      </div>
 
-          <div class="download-actions">
-            <a class="btn btn-primary" data-iso-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
-              <span data-iso-label>Download Live ISO</span>
-            </a>
-            <a class="btn btn-outline" data-release-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">Release notes</a>
+      <div class="variants">
+        <article class="variant glass" data-variant="online">
+          <div class="variant-head">
+            <h3>Online</h3>
+            <span class="tag sage">Smaller</span>
           </div>
-          <div class="status" id="releaseStatus" aria-live="polite">Looking up the latest beta…</div>
+          <p class="variant-meta" data-meta>About 5 GB · 16 GB USB stick or larger</p>
+          <p class="desc">A smaller download. You'll need Wi-Fi or Ethernet while installing, because the installer downloads Mutsu OS.</p>
+          <div class="parts" data-parts>
+            <p class="parts-empty">Looking up the download parts…</p>
+          </div>
+        </article>
+        <article class="variant glass" data-variant="offline">
+          <div class="variant-head">
+            <h3>Offline</h3>
+            <span class="tag sage">Everything included</span>
+          </div>
+          <p class="variant-meta" data-meta>About 21 GB · 32 GB USB stick or larger</p>
+          <p class="desc">Everything is on the USB stick, so you can install without an internet connection.</p>
+          <div class="parts" data-parts>
+            <p class="parts-empty">Looking up the download parts…</p>
+          </div>
+        </article>
+      </div>
 
-          <ul class="specs">
-            <li><small>Architecture</small><strong>x86_64 (64-bit)</strong></li>
-            <li><small>Firmware</small><strong>UEFI</strong></li>
-            <li><small>USB drive</small><strong>16 GB or larger</strong></li>
-            <li><small>Desktop</small><strong>GNOME 50 · Japandi</strong></li>
-          </ul>
+      <div class="build glass" id="build">
+        <div class="build-head">
+          <p class="eyebrow">Build the disk image</p>
+          <h3>Join the parts into one bootable ISO</h3>
+          <p>GitHub only allows files under 2 GB, so each ISO comes as a 7-Zip archive split into parts. Opening the first part puts the original <code>.iso</code> back together. It isn't compressed, so this only takes a few minutes.</p>
         </div>
 
-        <div>
+        <div class="build-controls">
+          <div class="seg-group">
+            <span class="seg-label">Your computer</span>
+            <div class="seg" role="tablist" aria-label="Operating system">
+              <button type="button" role="tab" data-os="linux" aria-selected="true">Linux</button>
+              <button type="button" role="tab" data-os="windows" aria-selected="false">Windows</button>
+              <button type="button" role="tab" data-os="mac" aria-selected="false">macOS</button>
+            </div>
+          </div>
+          <div class="seg-group">
+            <span class="seg-label">Download</span>
+            <div class="seg" aria-label="Which download">
+              <button type="button" data-pick="online" aria-pressed="true">Online</button>
+              <button type="button" data-pick="offline" aria-pressed="false">Offline</button>
+            </div>
+          </div>
+        </div>
+
+        <div role="tabpanel" data-panel="linux">
           <ol class="steps">
             <li>
-              <h4>Download the ISO</h4>
-              <p>Grab the live ISO above. It's a large file, so a wired connection helps.</p>
+              <h4>Download every part into one folder</h4>
+              <p>Get all the <code>.7z.001</code>, <code>.002</code>… parts and the <code>.iso.sha256</code> file. You can also download them all at once with the GitHub CLI:</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>gh release download <span data-tag>v0.9.0-beta.20261115</span> --repo markymark5127/mutsu-os \
+  --pattern '<span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso*'</code></pre></div>
             </li>
             <li>
-              <h4>Write it to a USB drive</h4>
-              <p>Use <a href="https://flathub.org/apps/org.fedoraproject.MediaWriter" target="_blank" rel="noopener">Media Writer</a>, <a href="https://etcher.balena.io/" target="_blank" rel="noopener">balenaEtcher</a> or <code>dd</code>. Everything on the drive will be erased.</p>
+              <h4>Install 7-Zip</h4>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code><span class="c"># Fedora</span>
+sudo dnf install 7zip
+<span class="c"># Debian / Ubuntu</span>
+sudo apt install 7zip</code></pre></div>
             </li>
             <li>
-              <h4>Boot from USB</h4>
-              <p>Restart and open your boot menu (usually F12, F11, Esc or F2). Choose the USB drive.</p>
+              <h4>Extract the ISO</h4>
+              <p>Open only the first part. 7-Zip finds the others in the same folder.</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>7z x <span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.7z.001</code></pre></div>
             </li>
             <li>
-              <h4>Try it, then install</h4>
-              <p>You'll land on the live desktop. When you're ready, open the installer from the dock.</p>
+              <h4>Check the download</h4>
+              <p>It should print <code>OK</code>. If it doesn't, download the parts again.</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>sha256sum -c <span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.sha256</code></pre></div>
+            </li>
+            <li>
+              <h4>Write it to a USB stick</h4>
+              <p>Use <a href="https://flathub.org/apps/org.fedoraproject.MediaWriter" target="_blank" rel="noopener">Fedora Media Writer</a> and choose <strong>Custom image</strong>, or use <code>dd</code>. Run <code>lsblk</code> first to find your stick and replace <code>/dev/sdX</code> with it. <span class="warn">This erases the USB stick.</span></p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>sudo dd if=<span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre></div>
             </li>
           </ol>
         </div>
+
+        <div role="tabpanel" data-panel="windows" hidden>
+          <ol class="steps">
+            <li>
+              <h4>Download every part into one folder</h4>
+              <p>Get all the <code>.7z.001</code>, <code>.002</code>… parts and the <code>.iso.sha256</code> file into the same folder, such as Downloads.</p>
+            </li>
+            <li>
+              <h4>Install 7-Zip</h4>
+              <p>Get it free from <a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-zip.org</a>.</p>
+            </li>
+            <li>
+              <h4>Extract the ISO</h4>
+              <p>Right-click <code><span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.7z.001</code> and choose <strong>7-Zip → Extract Here</strong>. On Windows 11, click <strong>Show more options</strong> first.</p>
+            </li>
+            <li>
+              <h4>Check the download</h4>
+              <p>In PowerShell, run this from that folder. The hash it prints should match the one in the <code>.iso.sha256</code> file (open it in Notepad).</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>Get-FileHash .\<span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso -Algorithm SHA256</code></pre></div>
+            </li>
+            <li>
+              <h4>Write it to a USB stick</h4>
+              <p>Use <a href="https://fedoraproject.org/workstation/download" target="_blank" rel="noopener">Fedora Media Writer</a> and choose <strong>Custom image</strong>, or use <a href="https://rufus.ie/" target="_blank" rel="noopener">Rufus</a> and pick <strong>DD Image</strong> mode when asked. <span class="warn">This erases the USB stick.</span></p>
+            </li>
+          </ol>
+        </div>
+
+        <div role="tabpanel" data-panel="mac" hidden>
+          <ol class="steps">
+            <li>
+              <h4>Download every part into one folder</h4>
+              <p>Get all the <code>.7z.001</code>, <code>.002</code>… parts and the <code>.iso.sha256</code> file into the same folder, such as Downloads.</p>
+            </li>
+            <li>
+              <h4>Install Keka or 7-Zip</h4>
+              <p>Get <a href="https://www.keka.io/" target="_blank" rel="noopener">Keka</a>, or install 7-Zip with Homebrew:</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>brew install sevenzip</code></pre></div>
+            </li>
+            <li>
+              <h4>Extract the ISO</h4>
+              <p>Open <code><span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.7z.001</code> with Keka, or run:</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>7zz x <span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.7z.001</code></pre></div>
+            </li>
+            <li>
+              <h4>Check the download</h4>
+              <p>It should print <code>OK</code>. If it doesn't, download the parts again.</p>
+              <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>shasum -a 256 -c <span data-base>mutsu-os-0.9.0-beta.20261115-live-online</span>.iso.sha256</code></pre></div>
+            </li>
+            <li>
+              <h4>Write it to a USB stick</h4>
+              <p>Use <a href="https://fedoraproject.org/workstation/download" target="_blank" rel="noopener">Fedora Media Writer</a> and choose <strong>Custom image</strong>, or use <a href="https://etcher.balena.io/" target="_blank" rel="noopener">balenaEtcher</a>. <span class="warn">This erases the USB stick.</span></p>
+            </li>
+          </ol>
+        </div>
+
+        <p class="after"><strong>Then boot it.</strong> Plug in the stick, restart, and pick it from your boot menu (usually F12, F11, Esc or F2). You'll land on the live desktop. When you're ready to install, open the installer from the dock.</p>
       </div>
 
       <div class="notice glass">
@@ -697,11 +894,8 @@
           <h3>Switch without reinstalling</h3>
           <p>If you run a bootc-based system, you can move to the Mutsu OS beta in place and switch back with <code>bootc rollback</code>.</p>
         </div>
-        <div class="code">
-          <button class="copy" type="button" data-copy="sudo bootc switch ghcr.io/markymark5127/mutsu-os:beta">Copy</button>
-          <div><span class="dim">$ </span>sudo bootc switch ghcr.io/markymark5127/mutsu-os:beta</div>
-          <div><span class="dim">$ </span>systemctl reboot</div>
-        </div>
+        <div class="code-wrap"><button class="copy" type="button">Copy</button><pre class="code"><code>sudo bootc switch ghcr.io/markymark5127/mutsu-os:beta
+systemctl reboot</code></pre></div>
       </div>
     </div>
   </section>
@@ -720,16 +914,40 @@
   </footer>
 
   <script>
-    // If the live ISO is hosted outside GitHub Releases (GitHub limits release
-    // files to 2 GiB), put its direct URL here and every download button uses it.
-    const ISO_URL = '';
-
     const REPO = 'markymark5127/mutsu-os';
-    const status = document.getElementById('releaseStatus');
+    const FALLBACK = { tag: 'v0.9.0-beta.20261115', url: 'https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115' };
+    const DL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>';
     const setAll = (sel, fn) => document.querySelectorAll(sel).forEach(fn);
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const gb = bytes => (bytes / 1e9).toFixed(bytes >= 1e10 ? 0 : 1) + ' GB';
 
-    function formatSize(bytes) {
-      return bytes >= 1e9 ? (bytes / 1e9).toFixed(1) + ' GB' : Math.round(bytes / 1e6) + ' MB';
+    // File names for the build instructions; replaced with the real ones once the release loads.
+    const state = {
+      tag: FALLBACK.tag,
+      pick: 'online',
+      base: { online: 'mutsu-os-0.9.0-beta.20261115-live-online', offline: 'mutsu-os-0.9.0-beta.20261115-live' }
+    };
+    function renderNames() {
+      setAll('[data-base]', el => el.textContent = state.base[state.pick]);
+      setAll('[data-tag]', el => el.textContent = state.tag);
+    }
+
+    function renderParts(variant, parts, sum, releaseUrl) {
+      const card = document.querySelector('[data-variant="' + variant + '"]');
+      const box = card.querySelector('[data-parts]');
+      if (!parts.length) {
+        box.innerHTML = '<p class="parts-empty">The parts for this download are added about an hour after each beta, once its boot tests pass. <a href="' + esc(releaseUrl) + '" target="_blank" rel="noopener">Check the release page</a>.</p>';
+        return;
+      }
+      const total = parts.reduce((n, a) => n + a.size, 0);
+      card.querySelector('[data-meta]').textContent =
+        gb(total) + ' in ' + parts.length + ' part' + (parts.length > 1 ? 's' : '') + ' · ' + (variant === 'offline' ? '32' : '16') + ' GB USB stick or larger';
+      const row = (cls, label, a) =>
+        '<li class="' + cls + '"><a href="' + esc(a.browser_download_url) + '" download>' + DL_ICON +
+        '<span class="n">' + label + '</span><span class="f">' + esc(a.name) + '</span><span class="s">' +
+        (a.size > 1e6 ? gb(a.size) : 'checksum') + '</span></a></li>';
+      box.innerHTML = '<ul>' + parts.map((a, i) => row('', 'Part ' + (i + 1), a)).join('') +
+        (sum ? row('sum', 'SHA-256', sum) : '') + '</ul>';
     }
 
     function applyRelease(rel) {
@@ -743,21 +961,21 @@
         setAll('[data-release-date]', el => el.textContent = 'Released ' + d);
       }
 
-      const iso = (rel.assets || []).find(a => /\.iso$/i.test(a.name || ''));
-      if (ISO_URL) {
-        setAll('[data-iso-link]', el => el.href = ISO_URL);
-        status.textContent = 'Direct download · ' + name;
-      } else if (iso) {
-        setAll('[data-iso-link]', el => el.href = iso.browser_download_url);
-        setAll('[data-iso-label]', el => el.textContent = 'Download Live ISO (' + formatSize(iso.size) + ')');
-        status.textContent = iso.name;
-      } else {
-        setAll('[data-iso-link]', el => el.href = rel.html_url);
-        status.textContent = 'The download opens the ' + name + ' release page.';
+      // Names follow the release workflow: mutsu-os-<tag without v>-live[-online].iso.7z.NNN
+      state.tag = rel.tag_name;
+      const stem = 'mutsu-os-' + rel.tag_name.replace(/^v/, '');
+      state.base = { online: stem + '-live-online', offline: stem + '-live' };
+      const assets = rel.assets || [];
+      for (const variant of ['online', 'offline']) {
+        const first = assets.find(a => a.name.endsWith(variant === 'online' ? '-live-online.iso.7z.001' : '-live.iso.7z.001'));
+        if (first) state.base[variant] = first.name.replace(/\.iso\.7z\.001$/, '');
+        const base = state.base[variant];
+        const parts = assets.filter(a => a.name.startsWith(base + '.iso.7z.') && /\.7z\.\d{3}$/.test(a.name))
+                            .sort((a, b) => a.name.localeCompare(b.name));
+        renderParts(variant, parts, assets.find(a => a.name === base + '.iso.sha256'), rel.html_url);
       }
+      renderNames();
     }
-
-    if (ISO_URL) setAll('[data-iso-link]', el => el.href = ISO_URL);
 
     // /releases (not /releases/latest) so beta pre-releases are included.
     fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=10')
@@ -765,24 +983,41 @@
       .then(list => {
         const published = list.filter(r => !r.draft);
         if (!published.length) throw new Error('none');
-        // Newest release that has an ISO attached, otherwise the newest release.
-        applyRelease(published.find(r => (r.assets || []).some(a => /\.iso$/i.test(a.name || ''))) || published[0]);
+        // Newest release that has live USB parts attached, otherwise the newest release.
+        applyRelease(published.find(r => (r.assets || []).some(a => /\.iso\.7z\.001$/.test(a.name))) || published[0]);
       })
       .catch(() => {
-        status.textContent = 'The download opens the Mutsu OS 0.9.0 Beta release page.';
+        ['online', 'offline'].forEach(v => renderParts(v, [], null, FALLBACK.url));
       });
 
-    document.querySelectorAll('[data-copy]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(btn.dataset.copy);
-          btn.textContent = 'Copied';
-        } catch (e) {
-          btn.textContent = 'Select & copy';
-        }
-        setTimeout(() => btn.textContent = 'Copy', 1800);
-      });
-    });
+    // OS tabs, defaulting to the visitor's system
+    function showOS(os) {
+      setAll('[data-os]', b => b.setAttribute('aria-selected', String(b.dataset.os === os)));
+      setAll('[data-panel]', p => p.hidden = p.dataset.panel !== os);
+    }
+    setAll('[data-os]', b => b.addEventListener('click', () => showOS(b.dataset.os)));
+    const ua = navigator.userAgent;
+    showOS(/Windows/i.test(ua) ? 'windows' : /Macintosh|Mac OS X/i.test(ua) ? 'mac' : 'linux');
+
+    // Online / Offline file names in the commands
+    setAll('[data-pick]', b => b.addEventListener('click', () => {
+      state.pick = b.dataset.pick;
+      setAll('[data-pick]', x => x.setAttribute('aria-pressed', String(x === b)));
+      renderNames();
+    }));
+    renderNames();
+
+    // Copy buttons
+    setAll('.copy', btn => btn.addEventListener('click', async () => {
+      const text = btn.parentElement.querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied';
+      } catch (e) {
+        btn.textContent = 'Select & copy';
+      }
+      setTimeout(() => btn.textContent = 'Copy', 1800);
+    }));
   </script>
 </body>
 </html>
