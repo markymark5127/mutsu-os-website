@@ -8,15 +8,16 @@ Static site for [Mutsu OS](https://github.com/markymark5127/mutsu-os), a calm, M
 - One theme only, with no switcher
 - Plain HTML and CSS with no build step. Assets live in `assets/`.
 
-## Download button
+## Downloads
 
-The download buttons look up the newest release on GitHub, **including beta pre-releases**:
+The Download section reads the newest Mutsu OS release from GitHub, **including beta pre-releases**, and lists the live USB parts that the `beta-release` workflow attaches:
 
-1. If `ISO_URL` at the bottom of `index.html` is set, every download button uses that direct link.
-2. Otherwise, if a release has an `.iso` file attached, the buttons link straight to it and show its size.
-3. Otherwise, they open the newest release page (currently `v0.9.0-beta.20261115`).
+- **Online** (`mutsu-os-<version>-live-online.iso.7z.001`, `.002`, …): about 5 GB, installs over the internet
+- **Offline** (`mutsu-os-<version>-live.iso.7z.001`, `.002`, …): about 21 GB, installs without internet
 
-> GitHub release files must be under 2 GiB. The live ISO is about 5.7 GB, so host it somewhere else (for example SourceForge, Cloudflare R2 or archive.org) and put that link in `ISO_URL`.
+Each download comes with its `.iso.sha256` file. The parts are uncompressed 7-Zip volumes of 2000 MiB each, because GitHub limits release files to 2 GiB. Until the parts are attached (about an hour after a beta is published), each card links to the release page.
+
+The **Build the disk image** panel has Linux, Windows and macOS steps for joining the parts into the bootable ISO (`7z x …7z.001`), checking it with `sha256sum`, and writing it to USB. The file names in the commands update to match the current release and the Online/Offline choice.
 
 ## Enable GitHub Pages
 
