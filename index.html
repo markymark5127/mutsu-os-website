@@ -4,363 +4,785 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mutsu OS</title>
+  <meta name="description" content="Mutsu OS is a calm, Mac-familiar Linux desktop with Steam and Proton gaming, an adaptive tablet mode, and an on-device assistant. Download the beta live ISO.">
+  <meta name="theme-color" content="#F3EFE7">
+  <meta property="og:title" content="Mutsu OS">
+  <meta property="og:description" content="A calm, Mac-familiar Linux desktop. Try the beta live ISO.">
+  <meta property="og:image" content="assets/wallpaper-japandi.webp">
+  <link rel="icon" type="image/svg+xml" href="assets/mutsu-logo-japandi.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f7f5f2;
-      --text: #2c2a27;
-      --accent: #788773;
-      --accent-soft: #a8b5a0;
-      --card: #ffffff;
-      --border: #e0ddd6;
-      --font: 'Inter', system-ui, sans-serif;
-      --radius: 16px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      /* Mutsu brand tokens (branding/docs/BRAND_GUIDE.md) */
+      --linen: #F3EFE7;
+      --surface: #FFFCF6;
+      --ink: #232823;
+      --ink-soft: #545b53;
+      --sage: #788773;
+      --deep: #384B3C;
+      --line: #D6DCCF;
+      --persimmon: #E58D63;
+
+      --glass: rgba(255, 252, 246, 0.55);
+      --glass-strong: rgba(255, 252, 246, 0.72);
+      --glass-dark: rgba(35, 40, 35, 0.28);
+      --glass-border: rgba(255, 255, 255, 0.65);
+      --glass-blur: blur(26px) saturate(170%);
+      --glass-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+        0 10px 40px rgba(35, 40, 35, 0.10),
+        0 2px 6px rgba(35, 40, 35, 0.05);
+
+      --r-lg: 28px;
+      --r-md: 20px;
+      --r-sm: 14px;
+      --font: 'Inter', 'Source Sans 3', Cantarell, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
     }
-    body.cyberpunk {
-      --bg: #050508;
-      --text: #e0e0ff;
-      --accent: #00e5ff;
-      --accent-soft: #ff2d9b;
-      --card: #0f0f18;
-      --border: #1a1a2e;
-      --font: 'VT323', 'Press Start 2P', monospace;
-      --radius: 2px;
-      --shadow: 0 0 20px rgba(0,229,255,0.3);
-      background-image: 
-        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
+
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.4s, color 0.4s;
-      min-height: 100vh;
-      position: relative;
+      color: var(--ink);
+      background: var(--linen);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    body.cyberpunk::before {
-      content: '';
+    a { color: var(--deep); }
+    img, svg { display: block; }
+
+    /* Soft colour fields behind the glass, like the desktop wallpaper */
+    .ambient {
       position: fixed;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,229,255,0.03) 2px,
-        rgba(0,229,255,0.03) 4px
-      );
+      z-index: -1;
       pointer-events: none;
-      z-index: 1;
-      animation: scan 8s linear infinite;
+      background:
+        radial-gradient(40vw 40vw at 85% 30%, rgba(229, 141, 99, 0.22), transparent 70%),
+        radial-gradient(50vw 50vw at 10% 60%, rgba(120, 135, 115, 0.30), transparent 70%),
+        radial-gradient(45vw 45vw at 60% 95%, rgba(56, 75, 60, 0.20), transparent 70%),
+        var(--linen);
     }
-    @keyframes scan {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(4px); }
+
+    .glass {
+      background: var(--glass);
+      -webkit-backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
     }
-    .theme-btn {
+
+    /* ---------- Top bar ---------- */
+    .topbar {
       position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 1000;
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 0.9rem;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: all 0.3s;
-      letter-spacing: 0.5px;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1100px, calc(100% - 24px));
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 8px 8px 8px 16px;
+      border-radius: 999px;
     }
-    body.cyberpunk .theme-btn {
-      background: linear-gradient(90deg, #00e5ff, #ff2d9b);
-      color: #000;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      animation: glitch-btn 3s infinite;
-    }
-    @keyframes glitch-btn {
-      0%, 90%, 100% { transform: translate(0); filter: none; }
-      92% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
-      94% { transform: translate(2px, -1px); filter: hue-rotate(-90deg); }
-      96% { transform: translate(-1px, -2px); }
-    }
-    .theme-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-    header {
-      text-align: center;
-      padding: 120px 20px 40px;
-      position: relative;
-      z-index: 2;
-    }
-    .logo {
-      width: 120px;
-      height: 120px;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
-    }
-    body.cyberpunk .logo {
-      filter: drop-shadow(0 0 15px #00e5ff) drop-shadow(0 0 30px #ff2d9b);
-      animation: logo-glitch 4s infinite;
-    }
-    @keyframes logo-glitch {
-      0%, 95%, 100% { transform: none; }
-      96% { transform: translate(2px, -1px) skewX(2deg); }
-      97% { transform: translate(-2px, 1px) skewX(-2deg); }
-      98% { transform: translate(1px, 2px); }
-    }
-    h1 {
-      font-size: 3.5rem;
-      margin: 0 0 10px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-    }
-    body.cyberpunk h1 {
-      font-family: 'Press Start 2P', cursive;
-      font-size: 2.2rem;
-      color: #00e5ff;
-      text-shadow: 0 0 10px #00e5ff, 2px 2px 0 #ff2d9b;
-      animation: text-glitch 5s infinite;
-    }
-    @keyframes text-glitch {
-      0%, 92%, 100% { text-shadow: 0 0 10px #00e5ff, 2px 2px 0 #ff2d9b; }
-      93% { text-shadow: 3px 0 #ff2d9b, -3px 0 #00e5ff; }
-      94% { text-shadow: -2px 0 #00e5ff, 2px 0 #ff2d9b; }
-    }
-    .subtitle {
-      font-size: 1.25rem;
-      max-width: 700px;
-      margin: 0 auto 30px;
-      opacity: 0.85;
-      line-height: 1.6;
-    }
-    body.cyberpunk .subtitle {
-      font-size: 1.4rem;
-      color: #a0a0ff;
-    }
-    .download-btn {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      padding: 14px 32px;
-      border-radius: var(--radius);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .brand img { width: 28px; height: 28px; }
+    .nav {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.92rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      transition: background 0.2s;
+    }
+    .nav a:hover { background: rgba(255, 255, 255, 0.55); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font: 600 1rem/1 var(--font);
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 16px 28px;
+      cursor: pointer;
+      border: 0;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn svg { width: 18px; height: 18px; flex: none; }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(180deg, #869681 0%, var(--deep) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 8px 24px rgba(56, 75, 60, 0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 12px 30px rgba(56,75,60,.42); }
+    .btn-glass {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.16);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .btn-glass:hover { background: rgba(255, 255, 255, 0.26); transform: translateY(-2px); }
+    .btn-small { padding: 10px 18px; font-size: 0.9rem; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      min-height: min(100vh, 960px);
+      min-height: min(100svh, 960px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 16px 140px;
+      color: #fff;
+      background: #3e5a55 url('assets/wallpaper-japandi.webp') center 60% / cover no-repeat;
+      isolation: isolate;
+    }
+    @media (max-width: 800px) {
+      .hero { background-image: url('assets/wallpaper-japandi-1200.webp'); }
+    }
+    .hero::after {
+      /* fade the wallpaper into the linen page */
+      content: '';
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 180px;
+      background: linear-gradient(180deg, transparent, var(--linen));
+      z-index: -1;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(60% 50% at 50% 42%, rgba(20, 30, 28, 0.35), transparent 75%);
+      z-index: -1;
+    }
+    .hero-logo {
+      width: 112px;
+      height: 112px;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.25));
+      animation: float 7s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @media (prefers-reduced-motion: reduce) { .hero-logo { animation: none; } }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
       font-weight: 500;
-      font-size: 1.1rem;
-      transition: all 0.3s;
-      box-shadow: var(--shadow);
+      padding: 6px 14px 6px 8px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.16);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
-    body.cyberpunk .download-btn {
-      background: #ff2d9b;
-      color: #000;
-      border: 2px solid #00e5ff;
+    .chip b {
+      background: var(--persimmon);
+      color: #fff;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      animation: pulse 2s infinite;
+      padding: 3px 8px;
+      border-radius: 999px;
     }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #ff2d9b; }
-      50% { box-shadow: 0 0 25px #00e5ff, 0 0 40px #ff2d9b; }
+    .hero h1 {
+      font-size: clamp(2.8rem, 8vw, 5.2rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      margin: 0 0 18px;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
     }
-    .download-btn:hover { transform: scale(1.05); }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px 20px 80px;
+    .hero .lede {
+      font-size: clamp(1.08rem, 2.2vw, 1.3rem);
+      font-weight: 400;
+      max-width: 640px;
+      margin: 0 auto 36px;
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+    .hero-meta {
+      margin-top: 22px;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    /* ---------- Sections ---------- */
+    section { padding: 96px 16px; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin: 0 0 12px;
+    }
+    h2 {
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0 0 16px;
+    }
+    .section-lede {
+      font-size: 1.12rem;
+      color: var(--ink-soft);
+      max-width: 620px;
+      margin: 0 0 48px;
+    }
+    .center { text-align: center; }
+    .center .section-lede { margin-left: auto; margin-right: auto; }
+
+    /* ---------- Desktop preview window ---------- */
+    .preview {
+      margin-top: -110px;
+      padding-top: 0;
       position: relative;
       z-index: 2;
     }
-    .highlights {
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto 50px;
-      line-height: 1.7;
-      font-size: 1.05rem;
+    .window {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      max-width: 880px;
+      margin: 0 auto;
+      background: rgba(255, 252, 246, 0.62);
     }
-    .highlights h2 {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      color: var(--accent);
+    .titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.35);
     }
-    body.cyberpunk .highlights h2 {
-      color: #00e5ff;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .light { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,.15); }
+    .light.r { background: #E27D64; }
+    .light.y { background: #E3B65A; }
+    .light.g { background: #8FA77F; }
+    .titlebar span {
+      margin: 0 auto;
+      transform: translateX(-26px);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
     }
+    .terminal {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      padding: 28px 32px 32px;
+      font: 0.88rem/1.7 var(--mono);
+      color: var(--ink);
+      align-items: center;
+    }
+    .terminal img { width: 120px; height: 120px; }
+    .terminal .k { color: var(--sage); font-weight: 500; }
+    .terminal .prompt { color: var(--deep); font-weight: 500; }
+    .terminal .row { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .swatches { display: flex; gap: 6px; margin-top: 8px; }
+    .swatches i { width: 22px; height: 12px; border-radius: 4px; display: block; }
+    @media (max-width: 640px) {
+      .terminal { grid-template-columns: 1fr; padding: 22px 18px; gap: 16px; font-size: 0.8rem; }
+      .terminal img { width: 72px; height: 72px; }
+    }
+
+    /* ---------- Features ---------- */
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
     }
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: var(--r-md);
       padding: 28px;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s;
+      transition: transform 0.25s, box-shadow 0.25s;
     }
-    body.cyberpunk .card {
-      border: 1px solid #00e5ff;
-      box-shadow: 0 0 15px rgba(0,229,255,0.2);
-      background: linear-gradient(135deg, #0f0f18 0%, #15152a 100%);
+    .card:hover { transform: translateY(-4px); }
+    .card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, #8d9c88, var(--sage));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 16px rgba(120,135,115,.35);
     }
-    body.cyberpunk .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 25px rgba(255,45,155,0.4);
+    .card .icon svg { width: 24px; height: 24px; stroke: #FFFCF6; }
+    .card h3 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+    .card p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+
+    /* ---------- Download ---------- */
+    .download-panel {
+      border-radius: var(--r-lg);
+      padding: clamp(28px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 48px;
+      background: var(--glass-strong);
     }
-    .card h3 {
-      margin-top: 0;
-      color: var(--accent);
-      font-size: 1.3rem;
-    }
-    body.cyberpunk .card h3 {
-      color: #ff2d9b;
+    @media (max-width: 860px) { .download-panel { grid-template-columns: 1fr; gap: 36px; } }
+    .release-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+    .release-title h3 { margin: 0; font-size: 1.6rem; letter-spacing: -0.02em; }
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      font-size: 1.1rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(229, 141, 99, 0.16);
+      color: #A8532C;
+      border: 1px solid rgba(229, 141, 99, 0.35);
     }
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      opacity: 0.7;
-      font-size: 0.9rem;
-      position: relative;
-      z-index: 2;
+    .release-sub { color: var(--ink-soft); margin: 0 0 24px; font-size: 0.95rem; }
+    .download-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+    .btn-outline {
+      color: var(--deep);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid var(--line);
     }
-    a { color: var(--accent); }
-    body.cyberpunk a { color: #00e5ff; }
+    .btn-outline:hover { background: rgba(255, 255, 255, 0.85); transform: translateY(-2px); }
     .status {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin: 20px auto;
-      max-width: 600px;
-      border: 1px dashed var(--border);
-      font-size: 0.95rem;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      min-height: 1.4em;
     }
-    body.cyberpunk .status {
-      border-color: #ff2d9b;
-      color: #ffaaee;
+    .specs {
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .specs li {
+      padding: 14px 16px;
+      border-radius: var(--r-sm);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+    .specs li small { display: block; color: var(--ink-soft); font-size: 0.78rem; margin-bottom: 2px; }
+    .specs li strong { font-weight: 600; }
+
+    .steps { list-style: none; counter-reset: s; padding: 0; margin: 0; }
+    .steps li {
+      counter-increment: s;
+      position: relative;
+      padding: 0 0 26px 52px;
+    }
+    .steps li::before {
+      content: counter(s);
+      position: absolute;
+      left: 0;
+      top: -2px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--deep);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+    }
+    .steps li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      bottom: 4px;
+      width: 1px;
+      background: var(--line);
+    }
+    .steps h4 { margin: 0 0 4px; font-size: 1rem; }
+    .steps p { margin: 0; font-size: 0.93rem; color: var(--ink-soft); }
+
+    .notice {
+      margin-top: 24px;
+      border-radius: var(--r-md);
+      padding: 18px 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+    }
+    .notice svg { width: 20px; height: 20px; flex: none; margin-top: 2px; stroke: #A8532C; }
+    .notice strong { color: var(--ink); }
+
+    /* ---------- Rebase ---------- */
+    .rebase {
+      border-radius: var(--r-lg);
+      padding: clamp(24px, 4vw, 40px);
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 32px;
+      align-items: center;
+    }
+    @media (max-width: 860px) { .rebase { grid-template-columns: 1fr; } }
+    .rebase h3 { margin: 0 0 8px; font-size: 1.35rem; letter-spacing: -0.015em; }
+    .rebase p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+    .code {
+      position: relative;
+      border-radius: var(--r-sm);
+      background: rgba(35, 40, 35, 0.88);
+      color: #EDE9DF;
+      font: 0.86rem/1.6 var(--mono);
+      padding: 18px 56px 18px 18px;
+      overflow-x: auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .code .dim { color: #9fb09a; user-select: none; }
+    .copy {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #EDE9DF;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font: 500 0.75rem var(--font);
+      cursor: pointer;
+    }
+    .copy:hover { background: rgba(255, 255, 255, 0.16); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 48px 16px 56px;
+    }
+    .foot {
+      max-width: 1100px;
+      margin: 0 auto;
+      border-radius: var(--r-md);
+      padding: 22px 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+    .foot .brand { font-size: 0.95rem; }
+    .foot nav { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-left: auto; }
+    .foot a { color: var(--ink-soft); text-decoration: none; }
+    .foot a:hover { color: var(--deep); }
+
+    /* ---------- Responsive nav ---------- */
+    @media (max-width: 720px) {
+      .nav { display: none; }
+      .topbar .btn { margin-left: auto; }
+    }
+    @media (max-width: 420px) {
+      .hero-actions .btn { width: 100%; }
+      .specs { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body class="japandi">
-  <button class="theme-btn" id="themeToggle">Switch to Cyberpunk</button>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
 
-  <header>
-    <img class="logo" id="logo" src="https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-japandi.svg" alt="Mutsu OS Logo">
-    <h1>Mutsu OS</h1>
-    <p class="subtitle">A Bazzite GNOME-derived, Mac-familiar Linux desktop with Steam/Proton gaming support, two visual styles (Calm Japandi and Cyberpunk), a compact Spotlight-style app/file launcher, and optional Mutsu AI help.</p>
-    <a class="download-btn" id="isoDownload" href="https://github.com/markymark5127/mutsu-os/releases" target="_blank" rel="noopener">Download Latest ISO</a>
-    <div class="status" id="releaseStatus">Checking for latest release...</div>
+  <header class="topbar glass">
+    <a class="brand" href="#top">
+      <img src="assets/mutsu-logo-japandi.svg" alt="" width="28" height="28">
+      Mutsu OS
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#download">Download</a>
+      <a href="#rebase">Rebase</a>
+      <a href="https://github.com/markymark5127/mutsu-os" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <a class="btn btn-primary btn-small" href="#download">Get the Beta</a>
   </header>
 
-  <main>
-    <div class="highlights">
-      <h2>Built for how you actually use it</h2>
-      <p>Mutsu OS is a desktop that understands convertible hardware. On a 2-in-1 it can switch between a full Mac-like desktop and a tablet-oriented app-grid Home, with posture detection and bottom-edge gestures planned for the Adaptive Desktop experience.</p>
-      <p>Gaming is first-class. The image keeps Bazzite’s full Steam and Proton hardware support, so your library runs the same way it does on stock Bazzite—no stripped drivers or missing codecs.</p>
-      <p>The Mutsu mechanic is an optional AI assistant that lives in the search launcher. It’s designed to help you find files and apps, answer questions about the system, and (when you choose) assist with setup or troubleshooting—always opt-in, never forced, and never shipping with your personal keys.</p>
+  <!-- Hero -->
+  <div class="hero" id="top">
+    <a class="chip" href="#download"><b>Beta</b> <span data-release-name>Mutsu OS 0.9.0 Beta</span> is out</a>
+    <h1>Mutsu OS</h1>
+    <p class="lede">A calm Linux desktop that feels familiar from the first click. It's Mac-like when your laptop is open, iPad-like when you fold it into a tablet, and it plays your Steam library.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" data-iso-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+        <span data-iso-label>Download Live ISO</span>
+      </a>
+      <a class="btn btn-glass" href="#features">Take a look</a>
     </div>
+    <p class="hero-meta">64-bit x86 · UEFI · Try it live from USB before you install</p>
+  </div>
 
-    <div class="features">
-      <div class="card">
-        <h3>Adaptive Desktop</h3>
-        <p>Convertible-ready: MacBook-like when open, iPad-style app grid when folded. Manual Desktop/Tablet selector today; automatic posture and gestures in progress.</p>
+  <!-- Desktop preview -->
+  <section class="preview" aria-label="System overview">
+    <div class="window glass">
+      <div class="titlebar">
+        <i class="light r"></i><i class="light y"></i><i class="light g"></i>
+        <span>Terminal</span>
       </div>
-      <div class="card">
-        <h3>Gaming Ready</h3>
-        <p>Full Bazzite Steam/Proton stack. Handheld, desktop, and HTPC hardware support stays intact.</p>
-      </div>
-      <div class="card">
-        <h3>Mutsu AI</h3>
-        <p>Opt-in assistant inside Mutsu Search. Helps with local search, system questions, and guided setup—credentials stay yours.</p>
-      </div>
-      <div class="card">
-        <h3>Calm Japandi</h3>
-        <p>Sage wallpaper, light appearance, soft rounded UI, floating Dash-to-Dock, and a serene green accent.</p>
-      </div>
-      <div class="card">
-        <h3>Cyberpunk Edge</h3>
-        <p>Harsh squared corners, neon gradients, high-contrast glitch aesthetics. Switch instantly.</p>
-      </div>
-      <div class="card">
-        <h3>Mac-Familiar</h3>
-        <p>Left window buttons, 12-hour clock, Super+Space search, hot corners off. Fully overridable.</p>
+      <div class="terminal">
+        <img src="assets/mutsu-logo-japandi.svg" alt="" width="120" height="120">
+        <div>
+          <div class="row"><span class="prompt">you@mutsu</span> ~ % fastfetch</div>
+          <div class="row"><span class="k">OS</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mutsu OS <span data-release-version>0.9.0 Beta</span> x86_64</div>
+          <div class="row"><span class="k">Desktop</span>&nbsp;&nbsp;GNOME 50 · Japandi</div>
+          <div class="row"><span class="k">Updates</span>&nbsp;&nbsp;Atomic, automatic, with rollback</div>
+          <div class="row"><span class="k">Gaming</span>&nbsp;&nbsp;&nbsp;Steam · Proton · Gamescope</div>
+          <div class="row"><span class="k">Search</span>&nbsp;&nbsp;&nbsp;Super + Space</div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#F3EFE7;border:1px solid #D6DCCF"></i><i style="background:#D6DCCF"></i><i style="background:#788773"></i><i style="background:#384B3C"></i><i style="background:#E58D63"></i><i style="background:#232823"></i>
+          </div>
+        </div>
       </div>
     </div>
-  </main>
+  </section>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="wrap">
+      <p class="eyebrow">Why Mutsu</p>
+      <h2>Quiet by design.<br>Powerful underneath.</h2>
+      <p class="section-lede">Mutsu OS keeps the desktop out of your way. Soft materials, sensible defaults, and a system that updates itself and can roll back if anything goes wrong.</p>
+
+      <div class="features">
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+          <h3>Mac-familiar</h3>
+          <p>Window buttons on the left, a top-left menu, Super shortcuts that work like Command, and a 12-hour clock. You can change any of it.</p>
+        </article>
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg></div>
+          <h3>Adaptive Desktop</h3>
+          <p>On a 2-in-1 it's a full desktop when open and an app-grid Home with touch gestures when folded. It's on by default.</p>
+        </article>
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h4M8 9v4M15 12h.01M18 10h.01"/><path d="M17.3 5H6.7a4 4 0 0 0-4 3.6L2 15a3 3 0 0 0 5.4 1.8L9 15h6l1.6 1.8A3 3 0 0 0 22 15l-.7-6.4A4 4 0 0 0 17.3 5Z"/></svg></div>
+          <h3>Ready for games</h3>
+          <p>Steam, Proton and the drivers are already set up for desktops, handhelds and the living room. Install a game and play.</p>
+        </article>
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <h3>Mutsu Search</h3>
+          <p>Press Super + Space to open a Spotlight-style launcher that finds apps and files instantly.</p>
+        </article>
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3Z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg></div>
+          <h3>Mutsu Mechanic</h3>
+          <p>A helper that lives in Search and runs on your computer, so you can ask it things offline. Cloud providers are opt-in, and your keys stay yours.</p>
+        </article>
+        <article class="card glass">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></div>
+          <h3>Atomic updates</h3>
+          <p>Each update is a whole new system image. If something breaks, pick the previous version at boot and you're back.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download -->
+  <section id="download">
+    <div class="wrap">
+      <div class="center">
+        <p class="eyebrow">Download</p>
+        <h2>Try it live. Install when you're ready.</h2>
+        <p class="section-lede">The live ISO boots the full Mutsu desktop from a USB stick without touching your disk. If you like it, the installer is right there on the desktop.</p>
+      </div>
+
+      <div class="download-panel glass">
+        <div>
+          <div class="release-title">
+            <h3 data-release-name>Mutsu OS 0.9.0 Beta</h3>
+            <span class="tag">Beta</span>
+          </div>
+          <p class="release-sub"><span data-release-date>Released November 15, 2026</span> · Live desktop ISO</p>
+
+          <div class="download-actions">
+            <a class="btn btn-primary" data-iso-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+              <span data-iso-label>Download Live ISO</span>
+            </a>
+            <a class="btn btn-outline" data-release-link href="https://github.com/markymark5127/mutsu-os/releases/tag/v0.9.0-beta.20261115" target="_blank" rel="noopener">Release notes</a>
+          </div>
+          <div class="status" id="releaseStatus" aria-live="polite">Looking up the latest beta…</div>
+
+          <ul class="specs">
+            <li><small>Architecture</small><strong>x86_64 (64-bit)</strong></li>
+            <li><small>Firmware</small><strong>UEFI</strong></li>
+            <li><small>USB drive</small><strong>16 GB or larger</strong></li>
+            <li><small>Desktop</small><strong>GNOME 50 · Japandi</strong></li>
+          </ul>
+        </div>
+
+        <div>
+          <ol class="steps">
+            <li>
+              <h4>Download the ISO</h4>
+              <p>Grab the live ISO above. It's a large file, so a wired connection helps.</p>
+            </li>
+            <li>
+              <h4>Write it to a USB drive</h4>
+              <p>Use <a href="https://flathub.org/apps/org.fedoraproject.MediaWriter" target="_blank" rel="noopener">Media Writer</a>, <a href="https://etcher.balena.io/" target="_blank" rel="noopener">balenaEtcher</a> or <code>dd</code>. Everything on the drive will be erased.</p>
+            </li>
+            <li>
+              <h4>Boot from USB</h4>
+              <p>Restart and open your boot menu (usually F12, F11, Esc or F2). Choose the USB drive.</p>
+            </li>
+            <li>
+              <h4>Try it, then install</h4>
+              <p>You'll land on the live desktop. When you're ready, open the installer from the dock.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="notice glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+        <div><strong>This is a beta.</strong> It's for testing, so try it live or in a virtual machine first, and back up anything important before you install on a computer you use every day. Please <a href="https://github.com/markymark5127/mutsu-os/issues" target="_blank" rel="noopener">report bugs on GitHub</a>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rebase -->
+  <section id="rebase" style="padding-top:0">
+    <div class="wrap">
+      <div class="rebase glass">
+        <div>
+          <p class="eyebrow">Already on an atomic desktop?</p>
+          <h3>Switch without reinstalling</h3>
+          <p>If you run a bootc-based system, you can move to the Mutsu OS beta in place and switch back with <code>bootc rollback</code>.</p>
+        </div>
+        <div class="code">
+          <button class="copy" type="button" data-copy="sudo bootc switch ghcr.io/markymark5127/mutsu-os:beta">Copy</button>
+          <div><span class="dim">$ </span>sudo bootc switch ghcr.io/markymark5127/mutsu-os:beta</div>
+          <div><span class="dim">$ </span>systemctl reboot</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer>
-    <p>Mutsu OS · <a href="https://github.com/markymark5127/mutsu-os" target="_blank">Source on GitHub</a> · Based on Universal Blue Bazzite & Fedora</p>
-    <p>Two visual styles. One desktop. Switch anytime.</p>
+    <div class="foot glass">
+      <span class="brand"><img src="assets/mutsu-logo-japandi.svg" alt="" width="24" height="24" style="width:24px;height:24px">Mutsu OS</span>
+      <span>A calm Linux desktop.</span>
+      <nav aria-label="Footer">
+        <a href="https://github.com/markymark5127/mutsu-os" target="_blank" rel="noopener">Source</a>
+        <a href="https://github.com/markymark5127/mutsu-os/releases" target="_blank" rel="noopener">All releases</a>
+        <a href="https://github.com/markymark5127/mutsu-os/blob/main/docs/INSTALL_AND_RECOVERY.md" target="_blank" rel="noopener">Install &amp; recovery</a>
+        <a href="https://github.com/markymark5127/mutsu-os/issues" target="_blank" rel="noopener">Report a bug</a>
+      </nav>
+    </div>
   </footer>
 
   <script>
-    const body = document.body;
-    const toggle = document.getElementById('themeToggle');
-    const logo = document.getElementById('logo');
-    const isoLink = document.getElementById('isoDownload');
+    // If the live ISO is hosted outside GitHub Releases (GitHub limits release
+    // files to 2 GiB), put its direct URL here and every download button uses it.
+    const ISO_URL = '';
+
+    const REPO = 'markymark5127/mutsu-os';
     const status = document.getElementById('releaseStatus');
+    const setAll = (sel, fn) => document.querySelectorAll(sel).forEach(fn);
 
-    const japandiLogo = 'https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-japandi.svg';
-    const cyberLogo = 'https://raw.githubusercontent.com/markymark5127/mutsu-os/main/branding/icons/mutsu-logo-cyberpunk.svg';
-
-    function setTheme(theme) {
-      if (theme === 'cyberpunk') {
-        body.classList.add('cyberpunk');
-        body.classList.remove('japandi');
-        toggle.textContent = 'Switch to Japandi';
-        logo.src = cyberLogo;
-        document.title = 'MUTSU OS // CYBER';
-      } else {
-        body.classList.remove('cyberpunk');
-        body.classList.add('japandi');
-        toggle.textContent = 'Switch to Cyberpunk';
-        logo.src = japandiLogo;
-        document.title = 'Mutsu OS';
-      }
-      localStorage.setItem('mutsu-theme', theme);
+    function formatSize(bytes) {
+      return bytes >= 1e9 ? (bytes / 1e9).toFixed(1) + ' GB' : Math.round(bytes / 1e6) + ' MB';
     }
 
-    toggle.addEventListener('click', () => {
-      const isCyber = body.classList.contains('cyberpunk');
-      setTheme(isCyber ? 'japandi' : 'cyberpunk');
-    });
+    function applyRelease(rel) {
+      const name = (rel.name || rel.tag_name).replace(/\s*\([^)]*\)\s*$/, '');
+      const version = (rel.tag_name || '').replace(/^v/, '').replace(/-beta.*/, '') + (rel.prerelease ? ' Beta' : '');
+      setAll('[data-release-name]', el => el.textContent = name);
+      setAll('[data-release-version]', el => el.textContent = version);
+      setAll('[data-release-link]', el => el.href = rel.html_url);
+      if (rel.published_at) {
+        const d = new Date(rel.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        setAll('[data-release-date]', el => el.textContent = 'Released ' + d);
+      }
 
-    // Load saved theme
-    const saved = localStorage.getItem('mutsu-theme');
-    if (saved === 'cyberpunk') setTheme('cyberpunk');
+      const iso = (rel.assets || []).find(a => /\.iso$/i.test(a.name || ''));
+      if (ISO_URL) {
+        setAll('[data-iso-link]', el => el.href = ISO_URL);
+        status.textContent = 'Direct download · ' + name;
+      } else if (iso) {
+        setAll('[data-iso-link]', el => el.href = iso.browser_download_url);
+        setAll('[data-iso-label]', el => el.textContent = 'Download Live ISO (' + formatSize(iso.size) + ')');
+        status.textContent = iso.name;
+      } else {
+        setAll('[data-iso-link]', el => el.href = rel.html_url);
+        status.textContent = 'The download opens the ' + name + ' release page.';
+      }
+    }
 
-    // Fetch latest release for ISO
-    fetch('https://api.github.com/repos/markymark5127/mutsu-os/releases/latest')
-      .then(r => {
-        if (!r.ok) throw new Error('No releases');
-        return r.json();
-      })
-      .then(data => {
-        const iso = (data.assets || []).find(a => a.name && a.name.toLowerCase().endsWith('.iso'));
-        if (iso) {
-          isoLink.href = iso.browser_download_url;
-          isoLink.textContent = `Download ${data.tag_name || 'Latest'} ISO`;
-          status.textContent = `Latest release: ${data.tag_name || 'unknown'} · ${iso.name}`;
-        } else {
-          status.textContent = 'No ISO asset in the latest release yet. Visit the releases page.';
-        }
+    if (ISO_URL) setAll('[data-iso-link]', el => el.href = ISO_URL);
+
+    // /releases (not /releases/latest) so beta pre-releases are included.
+    fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=10')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(list => {
+        const published = list.filter(r => !r.draft);
+        if (!published.length) throw new Error('none');
+        // Newest release that has an ISO attached, otherwise the newest release.
+        applyRelease(published.find(r => (r.assets || []).some(a => /\.iso$/i.test(a.name || ''))) || published[0]);
       })
       .catch(() => {
-        status.textContent = 'No published releases yet. Check the GitHub releases page for updates.';
-        isoLink.href = 'https://github.com/markymark5127/mutsu-os/releases';
+        status.textContent = 'The download opens the Mutsu OS 0.9.0 Beta release page.';
       });
+
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          btn.textContent = 'Copied';
+        } catch (e) {
+          btn.textContent = 'Select & copy';
+        }
+        setTimeout(() => btn.textContent = 'Copy', 1800);
+      });
+    });
   </script>
 </body>
 </html>
